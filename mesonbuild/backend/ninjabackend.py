@@ -1467,7 +1467,6 @@ int dummy;
                         or langname == 'cs':
                     continue
                 crstr = ''
-                cross_args = self.environment.properties.host.get_external_link_args(langname)
                 if is_cross:
                     crstr = '_CROSS'
                 rule = 'rule %s%s_LINKER\n' % (langname, crstr)

@@ -399,13 +399,9 @@ class CCompiler(Compiler):
         # Select a CRT if needed since we're linking
         if mode == 'link':
             args += self.get_linker_debug_crt_args()
-        if env.is_cross_build() and not self.is_cross:
-            for_machine = MachineChoice.BUILD
-        else:
-            for_machine = MachineChoice.HOST
         if mode in {'compile', 'preprocess'}:
             # Add CFLAGS/CXXFLAGS/OBJCFLAGS/OBJCXXFLAGS and CPPFLAGS from the env
-            sys_args = env.coredata.get_external_args(for_machine, self.language)
+            sys_args = env.coredata.get_external_args(self.language)
             # Apparently it is a thing to inject linker flags both
             # via CFLAGS _and_ LDFLAGS, even though the former are
             # also used during linking. These flags can break
@@ -414,7 +410,7 @@ class CCompiler(Compiler):
             args += cleaned_sys_args
         elif mode == 'link':
             # Add LDFLAGS from the env
-            args += env.coredata.get_external_link_args(for_machine, self.language)
+            args += env.coredata.get_external_link_args(self.language)
         return args
 
     def _get_compiler_check_args(self, env, extra_args, dependencies, mode='compile'):
