@@ -25,7 +25,7 @@ from .. import mlog
 from .. import coredata
 from . import compilers
 from ..mesonlib import (
-    EnvironmentException, MachineChoice, MesonException, Popen_safe, listify,
+    EnvironmentException, MesonException, Popen_safe, listify,
     version_compare, for_windows, for_darwin, for_cygwin, for_haiku,
     for_openbsd, darwin_get_object_archs, LibType
 )
@@ -436,9 +436,7 @@ class CCompiler(Compiler):
             if mode == 'link':
                 # Add link flags needed to find dependencies
                 args += d.get_link_args()
-
         args += self._get_basic_compiler_args(env, mode)
-
         args += self.get_compiler_check_args()
         # extra_args must override all other arguments, so we add them last
         args += extra_args
@@ -1082,11 +1080,7 @@ class CCompiler(Compiler):
         commands = self.get_exelist() + ['-v', '-E', '-']
         commands += self.get_always_args()
         # Add CFLAGS/CXXFLAGS/OBJCFLAGS/OBJCXXFLAGS from the env
-        if env.is_cross_build() and not self.is_cross:
-            for_machine = MachineChoice.BUILD
-        else:
-            for_machine = MachineChoice.HOST
-        commands += env.coredata.get_external_args(for_machine, self.language)
+        commands += env.coredata.get_external_args(self.language)
         mlog.debug('Finding framework path by running: ', ' '.join(commands), '\n')
         os_env = os.environ.copy()
         os_env['LC_ALL'] = 'C'

@@ -32,7 +32,6 @@ class CsCompiler(Compiler):
         self.language = 'cs'
         super().__init__(exelist, version)
         self.id = id
-        self.is_cross = False
         self.runner = runner
 
     def get_display_language(self):
