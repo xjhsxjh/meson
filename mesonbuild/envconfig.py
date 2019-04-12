@@ -117,6 +117,12 @@ class Properties(HasEnvVarFallback):
         super().__init__(fallback)
         self.properties = properties or {}
 
+    def get_external_args(self, language):
+        return mesonlib.stringlistify(self.properties.get(language + '_args', []))
+
+    def get_external_link_args(self, language):
+        return mesonlib.stringlistify(self.properties.get(language + '_link_args', []))
+
     def has_stdlib(self, language):
         return language + '_stdlib' in self.properties
 

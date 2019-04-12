@@ -1650,15 +1650,21 @@ rule FORTRAN_DEP_HACK%s
                 d = quote_func(d)
             quoted_depargs.append(d)
 
+        if is_cross:
+            cross_args = compiler.get_cross_extra_flags(self.environment, False)
+        else:
+            cross_args = ''
+
         if compiler.can_linker_accept_rsp():
             command_template = ''' command = {executable} @$out.rsp
  rspfile = $out.rsp
- rspfile_content = $ARGS {dep_args} {output_args} {compile_only_args} $in
+ rspfile_content = $ARGS {cross_args} {dep_args} {output_args} {compile_only_args} $in
 '''
         else:
-            command_template = ' command = {executable} $ARGS {dep_args} {output_args} {compile_only_args} $in\n'
+            command_template = ' command = {executable} $ARGS {cross_args} {dep_args} {output_args} {compile_only_args} $in\n'
         command = command_template.format(
             executable=' '.join([ninja_quote(i) for i in compiler.get_exelist()]),
+            cross_args=' '.join([quote_func(i) for i in cross_args]),
             dep_args=' '.join(quoted_depargs),
             output_args=' '.join(compiler.get_output_args('$out')),
             compile_only_args=' '.join(compiler.get_compile_only_args())
