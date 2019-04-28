@@ -2370,6 +2370,10 @@ def find_external_dependency(name, env, kwargs):
         except DependencyException as e:
             pkg_exc.append(e)
             mlog.debug(str(e))
+        except MesonException as e:
+            if 'non-clang' in str(e):
+                continue
+            raise
         else:
             pkg_exc.append(None)
             details = d.log_details()
